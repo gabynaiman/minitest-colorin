@@ -62,16 +62,16 @@ module Minitest
 
       if test_id.context != @previous_context
         io.puts
-        io.puts colorin(test_id.context).white.bold
+        io.puts ::Colorin.white(test_id.context).bold
         @previous_context = test_id.context
       end
 
-      label = colorin(LABELS[result.result_code]).send COLORS[GROUPS[result.result_code]]
-      number = colorin(test_id.number).dark
-      time = colorin("(#{result.time.round(3)}s)").dark
+      label = colorin(LABELS[result.result_code], GROUPS[result.result_code])
+      number = ::Colorin.dark(test_id.number)
+      time = ::Colorin.dark("(#{result.time.round(3)}s)")
       error = case result.result_code
-        when 'E' then colorin("#{error_message(result)}").dark.send(COLORS[:errors])
-        when 'F' then colorin("#{relative_path(result.failures[0].location)}").send(COLORS[:failures])
+        when 'E' then colorin("#{error_message(result)}", :errors)
+        when 'F' then colorin("#{relative_path(result.failures[0].location)}", :failures)
         else nil
       end
 
@@ -117,26 +117,25 @@ module Minitest
     end
 
     def print_detail_of(group)
-      color = COLORS[group]
       group_results = send group
       
       if group_results.any?
-        io.puts colorin(group.to_s.upcase).bold.underline.send(color)
+        io.puts colorin(group.to_s.upcase, group).bold.underline
         group_results.each_with_index do |r,i| 
           test_id = TestID.new r
           number = "#{i+1}) "
           indent = ' ' * number.size
           io.puts "#{number}#{test_id.context} > #{test_id.name}"
           if group == :errors
-            io.puts colorin("#{indent}#{r.failures[0].exception.class}: #{r.failures[0].exception.message}").send(color)
+            io.puts colorin("#{indent}#{r.failures[0].exception.class}: #{r.failures[0].exception.message}", group)
             r.failures[0].backtrace.each do |line|
-              io.puts colorin("#{indent}#{relative_path(line)}").dark
+              io.puts ::Colorin.dark("#{indent}#{relative_path(line)}")
             end
           else
             r.failures[0].message.split("\n").each do |line|
-              io.puts colorin("#{indent}#{line}").send(color)
+              io.puts colorin("#{indent}#{line}", group)
             end
-            io.puts colorin("#{indent}#{relative_path(r.failures[0].location)}").dark
+            io.puts ::Colorin.dark("#{indent}#{relative_path(r.failures[0].location)}")
           end
           io.puts if i < group_results.count - 1
         end
@@ -146,12 +145,12 @@ module Minitest
 
     def print_summary
       summary = [
-        colorin("#{results.count} tests").send(COLORS[:tests]),
-        colorin("#{passed.count} passed").send(COLORS[:passed]),
-        colorin("#{failures.count} failures").send(COLORS[:failures]),
-        colorin("#{errors.count} errors").send(COLORS[:errors]),
-        colorin("#{skips.count} skips").send(COLORS[:skips]),
-        colorin("#{assertions_count} assertions").send(COLORS[:assertions]),
+        colorin("#{results.count} tests", :tests),
+        colorin("#{passed.count} passed", :passed),
+        colorin("#{failures.count} failures", :failures),
+        colorin("#{errors.count} errors", :errors),
+        colorin("#{skips.count} skips", :skips),
+        colorin("#{assertions_count} assertions", :assertions),
       ]
 
       io.puts summary.join(', ')
@@ -171,8 +170,8 @@ module Minitest
       full_path.gsub "#{Dir.pwd}/", ''
     end
 
-    def colorin(text)
-      ::Colorin.new text
+    def colorin(text, group)
+      ::Colorin.send COLORS[group], text
     end
 
   end
