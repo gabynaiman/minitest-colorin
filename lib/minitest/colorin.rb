@@ -69,13 +69,14 @@ module Minitest
       label = colorin(LABELS[result.result_code], GROUPS[result.result_code])
       number = ::Colorin.dark(test_id.number)
       time = ::Colorin.dark("(#{result.time.round(3)}s)")
-      error = case result.result_code
-        when 'E' then colorin("#{error_message(result)}", :errors)
-        when 'F' then colorin("#{relative_path(result.failures[0].location)}", :failures)
+      message = case result.result_code
+        when 'S' then colorin(result.failures[0].message, :skips) 
+        when 'F' then colorin(relative_path(result.failures[0].location), :failures)
+        when 'E' then colorin(error_message(result), :errors)
         else nil
       end
 
-      io.puts "  #{label}  #{number} #{test_id.name} #{time} #{error}"
+      io.puts "  #{label}  #{number} #{test_id.name} #{time} #{message}"
     end
 
     def passed?
