@@ -4,7 +4,7 @@ module Minitest
   end
 
   def self.plugin_colorin_init(options) 
-    self.reporter.reporters = []
+    self.reporter.reporters.clear
     self.reporter << Colorin.new(options.fetch(:io, STDOUT))
   end
 
