@@ -4,8 +4,6 @@ require 'colorin'
 module Minitest
   class Colorin
 
-    VERSION = '0.1.0'
-
     class TestID
 
       REGEXP = /test_(?<number>\d{4})_(?<name>.+)/
