@@ -6,14 +6,14 @@ module Minitest
 
     class TestID
 
-      REGEXP = /test_(?<number>\d{4})_(?<name>.+)/
+      REGEXP = /test_(?<number>\d{4})_(?<name>.+)?/
 
       attr_reader :context, :name, :number
 
       def initialize(result)
         @context = result.class.name.gsub('::', ' > ')
         match = result.name.match REGEXP
-        @name = match[:name]
+        @name = match[:name] ? match[:name].strip : 'anonymous'
         @number = match[:number]
       end
 
