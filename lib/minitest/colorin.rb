@@ -34,12 +34,12 @@ module Minitest
     }
 
     COLORS = {
-      tests:      :blue_light,
-      passed:     :green_light,
-      failures:   :red_light,
-      errors:     :yellow_light,
-      skips:      :cyan_light,
-      assertions: :magenta_light
+      tests:      :blue_a700,
+      passed:     :green_500,
+      failures:   :red_500,
+      errors:     :amber_300,
+      skips:      :cyan_300,
+      assertions: :purple_400
     }
 
     attr_reader :io, :previous_context, :results, :started_at
@@ -67,8 +67,8 @@ module Minitest
       end
 
       label = colorin(LABELS[result.result_code], GROUPS[result.result_code])
-      number = ::Colorin.dark(test_id.number)
-      time = ::Colorin.dark("(#{result.time.round(3)}s)")
+      number = ::Colorin.grey_600(test_id.number)
+      time = ::Colorin.grey_600("(#{result.time.round(3)}s)")
       message = case result.result_code
         when 'S' then colorin(result.failures[0].message, :skips) 
         when 'F' then colorin(relative_path(result.failures[0].location), :failures)
@@ -130,13 +130,13 @@ module Minitest
           if group == :errors
             io.puts colorin("#{indent}#{r.failures[0].exception.class}: #{r.failures[0].exception.message}", group)
             r.failures[0].backtrace.each do |line|
-              io.puts ::Colorin.dark("#{indent}#{relative_path(line)}")
+              io.puts ::Colorin.grey_600("#{indent}#{relative_path(line)}")
             end
           else
             r.failures[0].message.split("\n").each do |line|
               io.puts colorin("#{indent}#{line}", group)
             end
-            io.puts ::Colorin.dark("#{indent}#{relative_path(r.failures[0].location)}")
+            io.puts ::Colorin.grey_600("#{indent}#{relative_path(r.failures[0].location)}")
           end
           io.puts if i < group_results.count - 1
         end
