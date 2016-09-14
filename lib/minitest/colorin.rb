@@ -56,11 +56,11 @@ module Minitest
     end
 
     def record(result)
-      @results << result
+      results << result
 
       test_id = TestID.new result
 
-      if test_id.context != @previous_context
+      if test_id.context != previous_context
         io.puts
         io.puts ::Colorin.white(test_id.context).bold
         @previous_context = test_id.context
@@ -80,7 +80,7 @@ module Minitest
     end
 
     def passed?
-      results.all? { |r| r.failures.empty? }
+      failures.empty? && errors.empty?
     end
 
     def report
