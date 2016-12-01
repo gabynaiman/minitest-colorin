@@ -1,11 +1,10 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'minitest/colorin/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'minitest-colorin'
-  spec.version       = Minitest::Colorin::VERSION
+  spec.version       = '0.1.4'
   spec.authors       = ['Gabriel Naiman']
   spec.email         = ['gabynaiman@gmail.com']
 

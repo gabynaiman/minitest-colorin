@@ -2,7 +2,7 @@ require 'minitest'
 require 'colorin'
 
 module Minitest
-  class Colorin
+  class Colorin < AbstractReporter
 
     class TestID
 
