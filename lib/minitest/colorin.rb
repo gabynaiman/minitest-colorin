@@ -6,7 +6,7 @@ module Minitest
 
     class TestID
 
-      REGEXP = /test_(?<number>\d{4})_(?<name>.+)?/
+      REGEXP = /test_(?<number>\d+)_(?<name>.+)?/
 
       attr_reader :context, :name, :number
 
