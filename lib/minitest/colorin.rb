@@ -6,7 +6,7 @@ module Minitest
 
     class TestID
 
-      REGEXP = /test_(?<number>\d+)_(?<name>.+)?/
+      REGEXP = /test_(?<number>\d*)_?(?<name>.+)?/
 
       attr_reader :context, :name, :number
 
@@ -15,6 +15,30 @@ module Minitest
         match = result.name.match REGEXP
         @name = match[:name] ? match[:name].strip : 'anonymous'
         @number = match[:number]
+
+        if style == :assertions
+          adjust_context_for_assertions
+          adjust_name_for_assertions
+        end
+      end
+
+      private
+
+      def style
+        number.empty? ? :assertions : :expectations
+      end
+
+      def adjust_context_for_assertions
+        @context.gsub!(/^Test|Test$/, '')
+      end
+
+      def adjust_name_for_assertions
+        words = name.split('_')
+        words = words.drop(1) if words.first == 'that'
+        words.first.capitalize!
+        words.last.gsub!(/([a-zA-Z])(\d+)$/, '\1 \2')
+
+        @name = words.join(' ')
       end
 
     end
